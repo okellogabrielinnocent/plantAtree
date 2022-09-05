@@ -1,0 +1,122 @@
+datasource postgres {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  campaignAdapters       Campaign[]
+  createdAt              DateTime       @default(now())
+  email                  String?        @unique
+  firstName              String?
+  id                     String         @id @default(cuid())
+  lastName               String?
+  organizationsCreatedBy Organization[] @relation(name: "createdBy")
+  organizationsUser      Organization[] @relation(name: "contactPerson")
+  password               String
+  phoneNumber            String         @unique
+  picture                String?
+  roles                  String[]
+  treeAdapters           Tree[]         @relation(name: "adaptors")
+  treePlantedBy          Tree?          @relation(name: "plantedBy", fields: [treePlantedById], references: [id])
+  treePlantedById        String?
+  updatedAt              DateTime       @updatedAt
+  username               String         @unique
+}
+
+model OrganizationType {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String?
+  updatedAt DateTime @updatedAt
+}
+
+model Organization {
+  contactPerson           User[]                  @relation(name: "contactPerson")
+  createdAt               DateTime                @default(now())
+  createdBy               User?                   @relation(name: "createdBy", fields: [createdById], references: [id])
+  createdById             String?
+  id                      String                  @id @default(cuid())
+  location                String?
+  name                    String?
+  organizationEmail       String?                 @unique
+  organizationPhoneNumber String?                 @unique
+  services                Service[]
+  types                   EnumOrganizationTypes[]
+  updatedAt               DateTime                @updatedAt
+  webSite                 String?
+}
+
+model Service {
+  cost           Float?
+  createdAt      DateTime      @default(now())
+  id             String        @id @default(cuid())
+  name           String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
+  updatedAt      DateTime      @updatedAt
+}
+
+model TreeCondition {
+  acidity            Float?
+  createdAt          DateTime @default(now())
+  estimatedLifeSpane Float?
+  id                 String   @id @default(cuid())
+  others             String?
+  plantingSeason     String?
+  rootType           String?
+  soilContent        String?
+  soilDepth          Float?
+  treeCondition      Tree[]
+  updatedAt          DateTime @updatedAt
+  waterAmount        Float?
+}
+
+model TreeType {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  trees     Tree[]
+  updatedAt DateTime @updatedAt
+}
+
+model Tree {
+  adaptors    User[]         @relation(name: "adaptors")
+  campaign    Campaign?      @relation(fields: [campaignId], references: [id])
+  campaignId  String?
+  condition   TreeCondition? @relation(fields: [conditionId], references: [id])
+  conditionId String?
+  cost        Float?
+  createdAt   DateTime       @default(now())
+  id          String         @id @default(cuid())
+  name        String
+  plantedBy   User[]         @relation(name: "plantedBy")
+  treeType    TreeType       @relation(fields: [treeTypeId], references: [id])
+  treeTypeId  String
+  updatedAt   DateTime       @updatedAt
+}
+
+model Campaign {
+  adapter   User[]
+  cost      String?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String?
+  trees     Tree[]
+  updatedAt DateTime @updatedAt
+}
+
+model CampaignType {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  updatedAt DateTime @updatedAt
+}
+
+enum EnumOrganizationTypes {
+  Nursery
+  Organization
+}
