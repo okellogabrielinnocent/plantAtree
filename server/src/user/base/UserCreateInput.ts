@@ -15,6 +15,7 @@ import { CampaignCreateNestedManyWithoutUsersInput } from "./CampaignCreateNeste
 import { ValidateNested, IsOptional, IsString, IsJSON } from "class-validator";
 import { Type } from "class-transformer";
 import { OrganizationCreateNestedManyWithoutUsersInput } from "./OrganizationCreateNestedManyWithoutUsersInput";
+import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
 import { TreeCreateNestedManyWithoutUsersInput } from "./TreeCreateNestedManyWithoutUsersInput";
@@ -80,15 +81,15 @@ class UserCreateInput {
 
   @ApiProperty({
     required: false,
-    type: () => OrganizationCreateNestedManyWithoutUsersInput,
+    type: () => OrganizationWhereUniqueInput,
   })
   @ValidateNested()
-  @Type(() => OrganizationCreateNestedManyWithoutUsersInput)
+  @Type(() => OrganizationWhereUniqueInput)
   @IsOptional()
-  @Field(() => OrganizationCreateNestedManyWithoutUsersInput, {
+  @Field(() => OrganizationWhereUniqueInput, {
     nullable: true,
   })
-  organizationsUser?: OrganizationCreateNestedManyWithoutUsersInput;
+  organizationsUser?: OrganizationWhereUniqueInput | null;
 
   @ApiProperty({
     required: true,

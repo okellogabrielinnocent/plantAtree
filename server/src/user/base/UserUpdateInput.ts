@@ -15,6 +15,7 @@ import { CampaignUpdateManyWithoutUsersInput } from "./CampaignUpdateManyWithout
 import { ValidateNested, IsOptional, IsString, IsJSON } from "class-validator";
 import { Type } from "class-transformer";
 import { OrganizationUpdateManyWithoutUsersInput } from "./OrganizationUpdateManyWithoutUsersInput";
+import { OrganizationWhereUniqueInput } from "../../organization/base/OrganizationWhereUniqueInput";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
 import { TreeUpdateManyWithoutUsersInput } from "./TreeUpdateManyWithoutUsersInput";
@@ -80,15 +81,15 @@ class UserUpdateInput {
 
   @ApiProperty({
     required: false,
-    type: () => OrganizationUpdateManyWithoutUsersInput,
+    type: () => OrganizationWhereUniqueInput,
   })
   @ValidateNested()
-  @Type(() => OrganizationUpdateManyWithoutUsersInput)
+  @Type(() => OrganizationWhereUniqueInput)
   @IsOptional()
-  @Field(() => OrganizationUpdateManyWithoutUsersInput, {
+  @Field(() => OrganizationWhereUniqueInput, {
     nullable: true,
   })
-  organizationsUser?: OrganizationUpdateManyWithoutUsersInput;
+  organizationsUser?: OrganizationWhereUniqueInput | null;
 
   @ApiProperty({
     required: false,
