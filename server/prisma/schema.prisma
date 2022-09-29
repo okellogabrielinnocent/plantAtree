@@ -1,6 +1,6 @@
 datasource postgres {
   provider = "postgresql"
-  url      = env("POSTGRESQL_URL")
+  url      = env("DB_URL")
 }
 
 generator client {
@@ -15,11 +15,12 @@ model User {
   id                     String         @id @default(cuid())
   lastName               String?
   organizationsCreatedBy Organization[] @relation(name: "createdBy")
-  organizationsUser      Organization[] @relation(name: "contactPerson")
+  organizationsUser      Organization?  @relation(name: "contactPerson", fields: [organizationsUserId], references: [id])
+  organizationsUserId    String?
   password               String
   phoneNumber            String         @unique
   picture                String?
-  roles                  String[]
+  roles                  Json
   treeAdapters           Tree[]         @relation(name: "adaptors")
   treePlantedBy          Tree?          @relation(name: "plantedBy", fields: [treePlantedById], references: [id])
   treePlantedById        String?

@@ -336,6 +336,13 @@ export class TreeControllerBase {
         firstName: true,
         id: true,
         lastName: true,
+
+        organizationsUser: {
+          select: {
+            id: true,
+          },
+        },
+
         phoneNumber: true,
         picture: true,
         roles: true,
@@ -445,6 +452,13 @@ export class TreeControllerBase {
         firstName: true,
         id: true,
         lastName: true,
+
+        organizationsUser: {
+          select: {
+            id: true,
+          },
+        },
+
         phoneNumber: true,
         picture: true,
         roles: true,

@@ -58,6 +58,12 @@ export class UserControllerBase {
       data: {
         ...data,
 
+        organizationsUser: data.organizationsUser
+          ? {
+              connect: data.organizationsUser,
+            }
+          : undefined,
+
         treePlantedBy: data.treePlantedBy
           ? {
               connect: data.treePlantedBy,
@@ -70,6 +76,13 @@ export class UserControllerBase {
         firstName: true,
         id: true,
         lastName: true,
+
+        organizationsUser: {
+          select: {
+            id: true,
+          },
+        },
+
         phoneNumber: true,
         picture: true,
         roles: true,
@@ -106,6 +119,13 @@ export class UserControllerBase {
         firstName: true,
         id: true,
         lastName: true,
+
+        organizationsUser: {
+          select: {
+            id: true,
+          },
+        },
+
         phoneNumber: true,
         picture: true,
         roles: true,
@@ -143,6 +163,13 @@ export class UserControllerBase {
         firstName: true,
         id: true,
         lastName: true,
+
+        organizationsUser: {
+          select: {
+            id: true,
+          },
+        },
+
         phoneNumber: true,
         picture: true,
         roles: true,
@@ -185,6 +212,12 @@ export class UserControllerBase {
         data: {
           ...data,
 
+          organizationsUser: data.organizationsUser
+            ? {
+                connect: data.organizationsUser,
+              }
+            : undefined,
+
           treePlantedBy: data.treePlantedBy
             ? {
                 connect: data.treePlantedBy,
@@ -197,6 +230,13 @@ export class UserControllerBase {
           firstName: true,
           id: true,
           lastName: true,
+
+          organizationsUser: {
+            select: {
+              id: true,
+            },
+          },
+
           phoneNumber: true,
           picture: true,
           roles: true,
@@ -242,6 +282,13 @@ export class UserControllerBase {
           firstName: true,
           id: true,
           lastName: true,
+
+          organizationsUser: {
+            select: {
+              id: true,
+            },
+          },
+
           phoneNumber: true,
           picture: true,
           roles: true,
@@ -461,114 +508,6 @@ export class UserControllerBase {
   ): Promise<void> {
     const data = {
       organizationsCreatedBy: {
-        disconnect: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @nestAccessControl.UseRoles({
-    resource: "Organization",
-    action: "read",
-    possession: "any",
-  })
-  @common.Get("/:id/organizationsUser")
-  @ApiNestedQuery(OrganizationFindManyArgs)
-  async findManyOrganizationsUser(
-    @common.Req() request: Request,
-    @common.Param() params: UserWhereUniqueInput
-  ): Promise<Organization[]> {
-    const query = plainToClass(OrganizationFindManyArgs, request.query);
-    const results = await this.service.findOrganizationsUser(params.id, {
-      ...query,
-      select: {
-        createdAt: true,
-
-        createdBy: {
-          select: {
-            id: true,
-          },
-        },
-
-        id: true,
-        location: true,
-        name: true,
-        organizationEmail: true,
-        organizationPhoneNumber: true,
-        types: true,
-        updatedAt: true,
-        webSite: true,
-      },
-    });
-    if (results === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return results;
-  }
-
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "update",
-    possession: "any",
-  })
-  @common.Post("/:id/organizationsUser")
-  async connectOrganizationsUser(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() body: OrganizationWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      organizationsUser: {
-        connect: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "update",
-    possession: "any",
-  })
-  @common.Patch("/:id/organizationsUser")
-  async updateOrganizationsUser(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() body: OrganizationWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      organizationsUser: {
-        set: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "update",
-    possession: "any",
-  })
-  @common.Delete("/:id/organizationsUser")
-  async disconnectOrganizationsUser(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() body: OrganizationWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      organizationsUser: {
         disconnect: body,
       },
     };

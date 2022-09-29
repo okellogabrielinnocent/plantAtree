@@ -94,17 +94,6 @@ export class UserServiceBase {
       .organizationsCreatedBy(args);
   }
 
-  async findOrganizationsUser(
-    parentId: string,
-    args: Prisma.OrganizationFindManyArgs
-  ): Promise<Organization[]> {
-    return this.prisma.user
-      .findUnique({
-        where: { id: parentId },
-      })
-      .organizationsUser(args);
-  }
-
   async findTreeAdapters(
     parentId: string,
     args: Prisma.TreeFindManyArgs
@@ -114,6 +103,14 @@ export class UserServiceBase {
         where: { id: parentId },
       })
       .treeAdapters(args);
+  }
+
+  async getOrganizationsUser(parentId: string): Promise<Organization | null> {
+    return this.prisma.user
+      .findUnique({
+        where: { id: parentId },
+      })
+      .organizationsUser();
   }
 
   async getTreePlantedBy(parentId: string): Promise<Tree | null> {

@@ -12,9 +12,17 @@ https://docs.amplication.com/docs/how-to/custom-code
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { Campaign } from "../../campaign/base/Campaign";
-import { ValidateNested, IsOptional, IsDate, IsString } from "class-validator";
+import {
+  ValidateNested,
+  IsOptional,
+  IsDate,
+  IsString,
+  IsJSON,
+} from "class-validator";
 import { Type } from "class-transformer";
 import { Organization } from "../../organization/base/Organization";
+import { GraphQLJSONObject } from "graphql-type-json";
+import { JsonValue } from "type-fest";
 import { Tree } from "../../tree/base/Tree";
 @ObjectType()
 class User {
@@ -87,12 +95,12 @@ class User {
 
   @ApiProperty({
     required: false,
-    type: () => [Organization],
+    type: () => Organization,
   })
   @ValidateNested()
   @Type(() => Organization)
   @IsOptional()
-  organizationsUser?: Array<Organization>;
+  organizationsUser?: Organization | null;
 
   @ApiProperty({
     required: true,
@@ -115,13 +123,10 @@ class User {
 
   @ApiProperty({
     required: true,
-    type: [String],
   })
-  @IsString({
-    each: true,
-  })
-  @Field(() => [String])
-  roles!: Array<string>;
+  @IsJSON()
+  @Field(() => GraphQLJSONObject)
+  roles!: JsonValue;
 
   @ApiProperty({
     required: false,

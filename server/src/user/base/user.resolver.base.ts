@@ -99,6 +99,12 @@ export class UserResolverBase {
       data: {
         ...args.data,
 
+        organizationsUser: args.data.organizationsUser
+          ? {
+              connect: args.data.organizationsUser,
+            }
+          : undefined,
+
         treePlantedBy: args.data.treePlantedBy
           ? {
               connect: args.data.treePlantedBy,
@@ -121,6 +127,12 @@ export class UserResolverBase {
         ...args,
         data: {
           ...args.data,
+
+          organizationsUser: args.data.organizationsUser
+            ? {
+                connect: args.data.organizationsUser,
+              }
+            : undefined,
 
           treePlantedBy: args.data.treePlantedBy
             ? {
@@ -202,26 +214,6 @@ export class UserResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => [Organization])
-  @nestAccessControl.UseRoles({
-    resource: "Organization",
-    action: "read",
-    possession: "any",
-  })
-  async organizationsUser(
-    @graphql.Parent() parent: User,
-    @graphql.Args() args: OrganizationFindManyArgs
-  ): Promise<Organization[]> {
-    const results = await this.service.findOrganizationsUser(parent.id, args);
-
-    if (!results) {
-      return [];
-    }
-
-    return results;
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.ResolveField(() => [Tree])
   @nestAccessControl.UseRoles({
     resource: "Tree",
@@ -239,6 +231,24 @@ export class UserResolverBase {
     }
 
     return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => Organization, { nullable: true })
+  @nestAccessControl.UseRoles({
+    resource: "Organization",
+    action: "read",
+    possession: "any",
+  })
+  async organizationsUser(
+    @graphql.Parent() parent: User
+  ): Promise<Organization | null> {
+    const result = await this.service.getOrganizationsUser(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
